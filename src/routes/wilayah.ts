@@ -9,6 +9,14 @@ import { ok, fail } from '../types.js';
 
 export const wilayahRoutes = new Hono<{ Bindings: Env }>();
 
+// Guard: check if D1 is available
+wilayahRoutes.use('*', async (c, next) => {
+  if (!c.env.DB) {
+    return c.json(fail('D1 database belum dikonfigurasi. Hubungi admin untuk setup.'), 503);
+  }
+  await next();
+});
+
 // ─── List all provinces ──────────────────────────────────────
 wilayahRoutes.get('/provinces', async (c) => {
   const q = c.req.query('q');

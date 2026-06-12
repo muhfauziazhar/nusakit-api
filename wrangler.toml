@@ -2,17 +2,18 @@ name = "nusakit-api"
 main = "src/index.ts"
 compatibility_date = "2025-06-01"
 compatibility_flags = ["nodejs_compat"]
+workers_dev = true
 
 # D1 Database for wilayah data
 [[d1_databases]]
 binding = "DB"
 database_name = "nusakit-db"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "8e3dbe7b-cf10-4a97-b229-7dd1caf61e27"
 
 # KV Namespace for caching
 [[kv_namespaces]]
 binding = "KV"
-id = "REPLACE_WITH_KV_ID"
+id = "9011e490d3dd48b586e3e59a451945d9"
 
 [vars]
 API_VERSION = "v1"

@@ -1,5 +1,5 @@
 export type Env = {
-  DB: D1Database;
+  DB?: D1Database;
   KV: KVNamespace;
   API_VERSION: string;
   CORS_ORIGIN: string;
