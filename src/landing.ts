@@ -230,6 +230,7 @@ const html = `<!DOCTYPE html>
     .feature-card:hover {
       border-color: var(--accent);
       box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+      transform: translateY(-2px);
     }
 
     .feature-card h3 {
@@ -254,7 +255,7 @@ const html = `<!DOCTYPE html>
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 0;
+      padding: 5px 0;
       color: var(--text-dim);
     }
 
@@ -317,35 +318,48 @@ const html = `<!DOCTYPE html>
       padding: 10px 14px;
       background: rgba(255,255,255,0.02);
       border-bottom: 1px solid var(--border);
+      gap: 10px;
     }
 
     .try-panel-url {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex: 1;
       min-width: 0;
+      font-family: var(--mono);
+      font-size: 13px;
     }
 
     .try-panel-url .method-badge {
       font-size: 11px;
       font-weight: 700;
-      font-family: var(--mono);
       flex-shrink: 0;
     }
 
     .try-panel-url .method-badge.get { color: var(--green); }
     .try-panel-url .method-badge.post { color: var(--accent-light); }
 
+    .try-url-segment {
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
     .try-url-input {
-      background: none;
-      border: none;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
       color: var(--text);
       font-family: var(--mono);
-      font-size: 13px;
-      flex: 1;
-      min-width: 0;
+      font-size: 12px;
+      width: 120px;
       outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .try-url-input:focus {
+      border-color: var(--accent);
     }
 
     .try-send {
@@ -359,14 +373,13 @@ const html = `<!DOCTYPE html>
       cursor: pointer;
       transition: background 0.15s;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .try-send:hover { background: var(--accent-light); }
     .try-send:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .try-panel-body {
-      padding: 12px 14px;
-    }
+    .try-panel-body { padding: 12px 14px; }
 
     .try-params {
       display: flex;
@@ -385,7 +398,7 @@ const html = `<!DOCTYPE html>
       font-family: var(--mono);
       font-size: 11px;
       color: var(--text-muted);
-      min-width: 60px;
+      min-width: 50px;
       text-align: right;
     }
 
@@ -402,9 +415,7 @@ const html = `<!DOCTYPE html>
       transition: border-color 0.15s;
     }
 
-    .try-param-input:focus {
-      border-color: var(--accent);
-    }
+    .try-param-input:focus { border-color: var(--accent); }
 
     .try-result {
       background: var(--bg);
@@ -472,6 +483,7 @@ const html = `<!DOCTYPE html>
       .features-grid { grid-template-columns: 1fr; }
       .try-param-row { flex-direction: column; align-items: stretch; }
       .try-param-label { text-align: left; min-width: auto; }
+      .try-panel-url { flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -486,8 +498,9 @@ const html = `<!DOCTYPE html>
       <h1>Nusakit <span>API</span></h1>
       <p>Satu API untuk semua validasi data Indonesia. NIK, NPWP, Nomor HP, Rupiah, Bank, Wilayah Administratif &mdash; dari provinsi sampai desa.</p>
       <div class="hero-actions">
-        <a href="https://github.com/muhfauziazhar/nusakit-api" class="btn btn-secondary">Star on GitHub</a>
-        <a href="/openapi.json" class="btn btn-secondary">OpenAPI Spec</a>
+        <a href="#features" class="btn btn-primary">🚀 Try It Out</a>
+        <a href="https://github.com/muhfauziazhar/nusakit-api" class="btn btn-secondary">⭐ Star on GitHub</a>
+        <a href="/openapi.json" class="btn btn-secondary">📄 OpenAPI Spec</a>
       </div>
     </div>
   </section>
@@ -540,7 +553,7 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
   </section>
 
   <!-- Features -->
-  <section class="section">
+  <section class="section" id="features">
     <div class="container">
       <h2 class="section-title">API Endpoints</h2>
       <p class="section-desc">Semua yang developer Indonesia butuhkan untuk validasi data &mdash; dalam satu API.</p>
@@ -551,11 +564,13 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <h3>Wilayah Administratif</h3>
           <p class="desc">Data wilayah lengkap dari provinsi sampai desa. Sumber: Kepmendagri 2025.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/provinces</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/provinces">Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/provinces/:code</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/provinces/32" data-labels="code" data-defaults="32">Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/regencies/:code</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/regencies/3201" data-labels="code" data-defaults="3201">Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/districts/:code</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/districts/320101" data-labels="code" data-defaults="320101">Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/search?q=...</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/search?q=bandung" data-labels="q" data-defaults="bandung">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/provinces</span><button class="try-btn" data-method="GET" data-base="/v1/wilayah/provinces">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/provinces/<i>:code</i></span><button class="try-btn" data-method="GET" data-base="/v1/wilayah/provinces/" data-slug="code" data-default-slug="32">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/regencies/<i>:code</i></span><button class="try-btn" data-method="GET" data-base="/v1/wilayah/regencies/" data-slug="code" data-default-slug="3201">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/districts/<i>:code</i></span><button class="try-btn" data-method="GET" data-base="/v1/wilayah/districts/" data-slug="code" data-default-slug="320101">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/villages/<i>:code</i></span><button class="try-btn" data-method="GET" data-base="/v1/wilayah/villages/" data-slug="code" data-default-slug="3201010001">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/search?q=...</span><button class="try-btn" data-method="GET" data-base="/v1/wilayah/search" data-params="q=bandung">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/lookup/<i>:code</i></span><button class="try-btn" data-method="GET" data-base="/v1/wilayah/lookup/" data-slug="code" data-default-slug="320101">Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
@@ -565,8 +580,8 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <h3>NIK (KTP)</h3>
           <p class="desc">Validasi struktural &amp; parse NIK. Extract provinsi, tanggal lahir, gender, umur.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-get">GET</span><span class="path">/v1/nik/validate?nik=...</span><button class="try-btn" data-method="GET" data-path="/v1/nik/validate?nik=3201010101900001" data-labels="nik" data-defaults="3201010101900001">Try</button></li>
-            <li><span class="method method-post">POST</span><span class="path">/v1/nik/validate</span><button class="try-btn" data-method="POST" data-path="/v1/nik/validate" data-body='{"nik":"3201010101900001"}'>Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/nik/validate?nik=...</span><button class="try-btn" data-method="GET" data-base="/v1/nik/validate" data-params="nik=3201010101900001">Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/nik/validate</span><button class="try-btn" data-method="POST" data-base="/v1/nik/validate" data-body='{"nik":"3201010101900001"}'>Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
@@ -576,8 +591,8 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <h3>NPWP</h3>
           <p class="desc">Validasi NPWP format lama (15 digit) dan baru (16 digit = NIK).</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span><span class="path">/v1/npwp/validate</span><button class="try-btn" data-method="POST" data-path="/v1/npwp/validate" data-body='{"npwp":"01.234.567.8-012.000"}'>Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/npwp/format?npwp=...</span><button class="try-btn" data-method="GET" data-path="/v1/npwp/format?npwp=012345678012000" data-labels="npwp" data-defaults="012345678012000">Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/npwp/validate</span><button class="try-btn" data-method="POST" data-base="/v1/npwp/validate" data-body='{"npwp":"01.234.567.8-012.000"}'>Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/npwp/format?npwp=...</span><button class="try-btn" data-method="GET" data-base="/v1/npwp/format" data-params="npwp=012345678012000">Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
@@ -587,8 +602,8 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <h3>Nomor HP</h3>
           <p class="desc">Validasi, normalisasi, dan deteksi operator (Telkomsel, Indosat, XL, dll).</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span><span class="path">/v1/phone/validate</span><button class="try-btn" data-method="POST" data-path="/v1/phone/validate" data-body='{"phone":"081234567890"}'>Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/phone/operator?phone=...</span><button class="try-btn" data-method="GET" data-path="/v1/phone/operator?phone=081234567890" data-labels="phone" data-defaults="081234567890">Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/phone/validate</span><button class="try-btn" data-method="POST" data-base="/v1/phone/validate" data-body='{"phone":"081234567890"}'>Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/phone/operator?phone=...</span><button class="try-btn" data-method="GET" data-base="/v1/phone/operator" data-params="phone=081234567890">Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
@@ -598,9 +613,9 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <h3>Rupiah</h3>
           <p class="desc">Format, parse, dan terbilang (angka &rarr; kata bahasa Indonesia).</p>
           <ul class="endpoint-list">
-            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/format?amount=...</span><button class="try-btn" data-method="GET" data-path="/v1/rupiah/format?amount=1500000" data-labels="amount" data-defaults="1500000">Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/terbilang?amount=...</span><button class="try-btn" data-method="GET" data-path="/v1/rupiah/terbilang?amount=1500000" data-labels="amount" data-defaults="1500000">Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/parse?input=...</span><button class="try-btn" data-method="GET" data-path="/v1/rupiah/parse?input=Rp%201.500.000" data-labels="input" data-defaults="Rp 1.500.000">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/format?amount=...</span><button class="try-btn" data-method="GET" data-base="/v1/rupiah/format" data-params="amount=1500000">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/terbilang?amount=...</span><button class="try-btn" data-method="GET" data-base="/v1/rupiah/terbilang" data-params="amount=1500000">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/parse?input=...</span><button class="try-btn" data-method="GET" data-base="/v1/rupiah/parse" data-params="input=Rp 1.500.000">Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
@@ -610,9 +625,9 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <h3>Bank</h3>
           <p class="desc">Kode bank BI, cari bank, validasi nomor rekening struktural.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-get">GET</span><span class="path">/v1/bank</span><button class="try-btn" data-method="GET" data-path="/v1/bank">Try</button></li>
-            <li><span class="method method-get">GET</span><span class="path">/v1/bank/:code</span><button class="try-btn" data-method="GET" data-path="/v1/bank/014" data-labels="code" data-defaults="014">Try</button></li>
-            <li><span class="method method-post">POST</span><span class="path">/v1/bank/validate-account</span><button class="try-btn" data-method="POST" data-path="/v1/bank/validate-account" data-body='{"bankCode":"014","accountNumber":"1234567890"}'>Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/bank</span><button class="try-btn" data-method="GET" data-base="/v1/bank">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/bank/<i>:code</i></span><button class="try-btn" data-method="GET" data-base="/v1/bank/" data-slug="code" data-default-slug="014">Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/bank/validate-account</span><button class="try-btn" data-method="POST" data-base="/v1/bank/validate-account" data-body='{"bankCode":"014","accountNumber":"1234567890"}'>Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
@@ -622,9 +637,9 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <h3>Dummy Generator</h3>
           <p class="desc">Generate data dummy untuk testing. NIK, NPWP, nomor HP yang valid secara struktur.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/nik</span><button class="try-btn" data-method="POST" data-path="/v1/dummy/nik" data-body='{"count":3}'>Try</button></li>
-            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/phone</span><button class="try-btn" data-method="POST" data-path="/v1/dummy/phone" data-body='{"count":3}'>Try</button></li>
-            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/npwp</span><button class="try-btn" data-method="POST" data-path="/v1/dummy/npwp" data-body='{"count":3}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/nik</span><button class="try-btn" data-method="POST" data-base="/v1/dummy/nik" data-body='{"count":3}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/phone</span><button class="try-btn" data-method="POST" data-base="/v1/dummy/phone" data-body='{"count":3}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/npwp</span><button class="try-btn" data-method="POST" data-base="/v1/dummy/npwp" data-body='{"count":3}'>Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
@@ -635,7 +650,7 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
   <!-- Footer -->
   <footer>
     <div class="container">
-      <p>Nusakit API &bull; Built by <a href="https://github.com/muhfauziazhar">Muhammad Fauzi Azhar</a></p>
+      <p>Nusakit API &bull; Built with ☕ by <a href="https://github.com/muhfauziazhar">Muhammad Fauzi Azhar</a></p>
       <p style="margin-top: 8px;">
         <a href="https://github.com/muhfauziazhar/nusakit-api">GitHub</a> &bull;
         <a href="/openapi.json">OpenAPI Spec</a> &bull;
@@ -658,36 +673,50 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
         document.querySelectorAll('.try-panel.open').forEach(p => p.classList.remove('open'));
         document.querySelectorAll('.try-btn.active').forEach(b => b.classList.remove('active'));
 
-        if (isActive) return; // toggle off
+        if (isActive) return;
 
         btn.classList.add('active');
         const method = btn.dataset.method;
-        const path = btn.dataset.path;
+        const base = btn.dataset.base;
+        const slug = btn.dataset.slug;
+        const defaultSlug = btn.dataset.defaultSlug || '';
+        const params = btn.dataset.params || '';
         const body = btn.dataset.body || '';
-        const labels = btn.dataset.labels ? btn.dataset.labels.split(',') : [];
-        const defaults = btn.dataset.defaults ? btn.dataset.defaults.split(',') : [];
 
-        // Parse path into base + query
-        const [basePath, queryStr] = path.split('?');
-        const queryParams = queryStr ? Object.fromEntries(new URLSearchParams(queryStr)) : {};
-
+        let headerHtml = '';
         let paramsHtml = '';
+
+        // Build URL display with editable slug
+        if (slug) {
+          headerHtml =
+            '<div class="try-panel-url">' +
+              '<span class="method-badge ' + method.toLowerCase() + '">' + method + '</span>' +
+              '<span class="try-url-segment">' + base + '</span>' +
+              '<input class="try-url-input try-slug" value="' + defaultSlug + '" placeholder=":' + slug + '">' +
+            '</div>';
+        } else {
+          headerHtml =
+            '<div class="try-panel-url">' +
+              '<span class="method-badge ' + method.toLowerCase() + '">' + method + '</span>' +
+              '<span class="try-url-segment">' + base + '</span>' +
+            '</div>';
+        }
+
+        // Build query params or body input
         if (method === 'POST' && body) {
-          paramsHtml = '<div class="try-params"><div class="try-param-row"><span class="try-param-label">body</span><input class="try-param-input try-body" value="' + body.replace(/"/g, '&quot;') + '"></div></div>';
-        } else if (Object.keys(queryParams).length > 0) {
+          paramsHtml = '<div class="try-params"><div class="try-param-row"><span class="try-param-label">body</span><input class="try-param-input try-body"></div></div>';
+        } else if (params) {
+          const pairs = new URLSearchParams(params);
           paramsHtml = '<div class="try-params">';
-          for (const [k, v] of Object.entries(queryParams)) {
-            paramsHtml += '<div class="try-param-row"><span class="try-param-label">' + k + '</span><input class="try-param-input" data-param="' + k + '" value="' + v + '"></div>';
+          for (const [k, v] of pairs.entries()) {
+            paramsHtml += '<div class="try-param-row"><span class="try-param-label">' + k + '</span><input class="try-param-input try-query" data-key="' + k + '" value="' + v + '"></div>';
           }
           paramsHtml += '</div>';
         }
 
         panel.innerHTML =
           '<div class="try-panel-header">' +
-            '<div class="try-panel-url">' +
-              '<span class="method-badge ' + method.toLowerCase() + '">' + method + '</span>' +
-              '<input class="try-url-input" value="' + path + '" readonly>' +
-            '</div>' +
+            headerHtml +
             '<button class="try-send">Send</button>' +
           '</div>' +
           '<div class="try-panel-body">' +
@@ -697,7 +726,12 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
 
         panel.classList.add('open');
 
-        // Wire send button
+        // Set body value via JS to avoid template escaping issues
+        if (method === 'POST' && body) {
+          panel.querySelector('.try-body').value = body;
+        }
+
+        // Wire send
         const sendBtn = panel.querySelector('.try-send');
         sendBtn.addEventListener('click', async () => {
           sendBtn.disabled = true;
@@ -705,32 +739,42 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           const result = panel.querySelector('.try-result');
           result.textContent = 'Loading...';
 
-          let url = basePath;
-          let fetchOpts = { method };
+          let url = base;
+          const fetchOpts = { method };
+
+          if (slug) {
+            const slugVal = panel.querySelector('.try-slug').value.trim();
+            url = base + encodeURIComponent(slugVal);
+          }
 
           if (method === 'POST' && body) {
-            const bodyInput = panel.querySelector('.try-body');
             fetchOpts.headers = { 'Content-Type': 'application/json' };
-            fetchOpts.body = bodyInput ? bodyInput.value : body;
-          } else {
-            const inputs = panel.querySelectorAll('.try-param-input[data-param]');
-            const params = new URLSearchParams();
-            inputs.forEach(inp => { if (inp.value) params.set(inp.dataset.param, inp.value); });
-            const qs = params.toString();
-            if (qs) url += '?' + qs;
+            fetchOpts.body = panel.querySelector('.try-body').value;
+          } else if (params) {
+            const qs = new URLSearchParams();
+            panel.querySelectorAll('.try-query').forEach(inp => {
+              if (inp.value) qs.set(inp.dataset.key, inp.value);
+            });
+            const qsStr = qs.toString();
+            if (qsStr) url += '?' + qsStr;
           }
 
           try {
             const res = await fetch(url, fetchOpts);
             const data = await res.json();
-            const statusClass = res.ok ? 'ok' : 'err';
-            result.innerHTML = '<span class="status ' + statusClass + '">' + res.status + ' ' + res.statusText + '</span>\\n' + JSON.stringify(data, null, 2);
+            const cls = res.ok ? 'ok' : 'err';
+            result.innerHTML = '<span class="status ' + cls + '">' + res.status + ' ' + res.statusText + '</span>\\n' + JSON.stringify(data, null, 2);
           } catch (e) {
             result.innerHTML = '<span class="status err">Error</span>\\n' + e.message;
           }
 
           sendBtn.disabled = false;
           sendBtn.textContent = 'Send';
+        });
+
+        // Enter to send
+        panel.querySelectorAll('input').forEach(inp => {
+          inp.addEventListener('keydown', e => { if (e.key === 'Enter') sendBtn.click(); });
         });
       });
     });
