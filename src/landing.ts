@@ -230,9 +230,7 @@ const html = `<!DOCTYPE html>
     .feature-card:hover {
       border-color: var(--accent);
       box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
-      transform: translateY(-2px);
     }
-
 
     .feature-card h3 {
       font-size: 1.1rem;
@@ -240,7 +238,7 @@ const html = `<!DOCTYPE html>
       margin-bottom: 8px;
     }
 
-    .feature-card p {
+    .feature-card .desc {
       color: var(--text-dim);
       font-size: 0.9rem;
       margin-bottom: 16px;
@@ -256,9 +254,11 @@ const html = `<!DOCTYPE html>
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 4px 0;
+      padding: 6px 0;
       color: var(--text-dim);
     }
+
+    .endpoint-list li .path { flex: 1; }
 
     .method {
       display: inline-block;
@@ -273,84 +273,165 @@ const html = `<!DOCTYPE html>
     .method-get { background: rgba(16, 185, 129, 0.2); color: var(--green); }
     .method-post { background: rgba(59, 130, 246, 0.2); color: var(--accent-light); }
 
-    /* ─── Playground ─── */
-    .playground {
-      background: var(--bg-card);
+    .try-btn {
+      background: none;
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .playground h3 {
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-    }
-
-    .pg-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .pg-select, .pg-input {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: var(--text);
+      color: var(--accent-light);
       font-family: var(--mono);
-      font-size: 14px;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
     }
 
-    .pg-select { min-width: 200px; }
-    .pg-input { flex: 1; }
-
-    .pg-select:focus, .pg-input:focus {
-      outline: none;
+    .try-btn:hover {
+      background: var(--accent);
+      color: white;
       border-color: var(--accent);
     }
 
-    .pg-btn {
-      padding: 10px 20px;
+    .try-btn.active {
       background: var(--accent);
       color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
+      border-color: var(--accent);
     }
 
-    .pg-btn:hover { background: var(--accent-light); }
-
-    .pg-result {
+    /* ─── Inline Try Panel ─── */
+    .try-panel {
+      display: none;
       margin-top: 16px;
       background: #0d1117;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .try-panel.open { display: block; }
+
+    .try-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .try-panel-url {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .try-panel-url .method-badge {
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--mono);
+      flex-shrink: 0;
+    }
+
+    .try-panel-url .method-badge.get { color: var(--green); }
+    .try-panel-url .method-badge.post { color: var(--accent-light); }
+
+    .try-url-input {
+      background: none;
+      border: none;
+      color: var(--text);
       font-family: var(--mono);
       font-size: 13px;
-      min-height: 80px;
-      max-height: 300px;
+      flex: 1;
+      min-width: 0;
+      outline: none;
+    }
+
+    .try-send {
+      padding: 6px 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .try-send:hover { background: var(--accent-light); }
+    .try-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .try-panel-body {
+      padding: 12px 14px;
+    }
+
+    .try-params {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .try-param-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .try-param-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .try-param-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 10px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .try-param-input:focus {
+      border-color: var(--accent);
+    }
+
+    .try-result {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      max-height: 280px;
       overflow-y: auto;
       white-space: pre-wrap;
       color: var(--text-dim);
+      line-height: 1.6;
+      min-height: 40px;
     }
 
-    .pg-status {
+    .try-result .status {
       display: inline-block;
       padding: 2px 8px;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       margin-bottom: 8px;
     }
 
-    .pg-status-200 { background: rgba(16, 185, 129, 0.2); color: var(--green); }
-    .pg-status-400 { background: rgba(239, 68, 68, 0.2); color: var(--red); }
+    .try-result .status.ok { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+    .try-result .status.err { background: rgba(239, 68, 68, 0.2); color: var(--red); }
 
     /* ─── Stats ─── */
     .stats {
@@ -387,9 +468,10 @@ const html = `<!DOCTYPE html>
     /* ─── Responsive ─── */
     @media (max-width: 640px) {
       .hero { padding: 48px 0 40px; }
-      .pg-row { flex-direction: column; }
       .stats { gap: 24px; }
       .features-grid { grid-template-columns: 1fr; }
+      .try-param-row { flex-direction: column; align-items: stretch; }
+      .try-param-label { text-align: left; min-width: auto; }
     }
   </style>
 </head>
@@ -402,9 +484,8 @@ const html = `<!DOCTYPE html>
         Open Source &bull; Free Forever &bull; MIT License
       </div>
       <h1>Nusakit <span>API</span></h1>
-      <p>Satu API untuk semua validasi data Indonesia. NIK, NPWP, Nomor HP, Rupiah, Bank, Wilayah Administratif — dari provinsi sampai desa.</p>
+      <p>Satu API untuk semua validasi data Indonesia. NIK, NPWP, Nomor HP, Rupiah, Bank, Wilayah Administratif &mdash; dari provinsi sampai desa.</p>
       <div class="hero-actions">
-        <a href="#playground" class="btn btn-primary">Try It Out</a>
         <a href="https://github.com/muhfauziazhar/nusakit-api" class="btn btn-secondary">Star on GitHub</a>
         <a href="/openapi.json" class="btn btn-secondary">OpenAPI Spec</a>
       </div>
@@ -444,16 +525,16 @@ const html = `<!DOCTYPE html>
         <div class="code-body"><span class="comment"># Validate NIK</span>
 curl <span class="url">https://nusakit.my.id/v1/nik/validate?nik=320101...</span>
 
-<span class="comment"># Terbilang — angka ke kata bahasa Indonesia</span>
+<span class="comment"># Terbilang &mdash; angka ke kata bahasa Indonesia</span>
 curl <span class="url">https://nusakit.my.id/v1/rupiah/terbilang?amount=1500000</span>
-<span class="comment"># → "satu juta lima ratus ribu rupiah"</span>
+<span class="comment"># &rarr; "satu juta lima ratus ribu rupiah"</span>
 
 <span class="comment"># Cari wilayah</span>
 curl <span class="url">https://nusakit.my.id/v1/wilayah/search?q=bandung</span>
 
 <span class="comment"># Detect operator HP</span>
 curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=081234567890</span>
-<span class="comment"># → { "operator": "Telkomsel", "valid": true }</span></div>
+<span class="comment"># &rarr; { "operator": "Telkomsel", "valid": true }</span></div>
       </div>
     </div>
   </section>
@@ -462,115 +543,91 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
   <section class="section">
     <div class="container">
       <h2 class="section-title">API Endpoints</h2>
-      <p class="section-desc">Semua yang developer Indonesia butuhkan untuk validasi data — dalam satu API.</p>
+      <p class="section-desc">Semua yang developer Indonesia butuhkan untuk validasi data &mdash; dalam satu API.</p>
 
       <div class="features-grid">
         <!-- Wilayah -->
         <div class="feature-card">
-          
           <h3>Wilayah Administratif</h3>
-          <p>Data wilayah lengkap dari provinsi sampai desa. Sumber: Kepmendagri 2025.</p>
+          <p class="desc">Data wilayah lengkap dari provinsi sampai desa. Sumber: Kepmendagri 2025.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-get">GET</span> /v1/wilayah/provinces</li>
-            <li><span class="method method-get">GET</span> /v1/wilayah/regencies/:code</li>
-            <li><span class="method method-get">GET</span> /v1/wilayah/districts/:code</li>
-            <li><span class="method method-get">GET</span> /v1/wilayah/villages/:code</li>
-            <li><span class="method method-get">GET</span> /v1/wilayah/search?q=...</li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/provinces</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/provinces">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/provinces/:code</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/provinces/32" data-labels="code" data-defaults="32">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/regencies/:code</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/regencies/3201" data-labels="code" data-defaults="3201">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/districts/:code</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/districts/320101" data-labels="code" data-defaults="320101">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/wilayah/search?q=...</span><button class="try-btn" data-method="GET" data-path="/v1/wilayah/search?q=bandung" data-labels="q" data-defaults="bandung">Try</button></li>
           </ul>
+          <div class="try-panel"></div>
         </div>
 
         <!-- NIK -->
         <div class="feature-card">
-          
           <h3>NIK (KTP)</h3>
-          <p>Validasi struktural & parse NIK. Extract provinsi, tanggal lahir, gender, umur.</p>
+          <p class="desc">Validasi struktural &amp; parse NIK. Extract provinsi, tanggal lahir, gender, umur.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span> /v1/nik/validate</li>
-            <li><span class="method method-get">GET</span> /v1/nik/validate?nik=...</li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/nik/validate?nik=...</span><button class="try-btn" data-method="GET" data-path="/v1/nik/validate?nik=3201010101900001" data-labels="nik" data-defaults="3201010101900001">Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/nik/validate</span><button class="try-btn" data-method="POST" data-path="/v1/nik/validate" data-body='{"nik":"3201010101900001"}'>Try</button></li>
           </ul>
+          <div class="try-panel"></div>
         </div>
 
         <!-- NPWP -->
         <div class="feature-card">
-          
           <h3>NPWP</h3>
-          <p>Validasi NPWP format lama (15 digit) dan baru (16 digit = NIK).</p>
+          <p class="desc">Validasi NPWP format lama (15 digit) dan baru (16 digit = NIK).</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span> /v1/npwp/validate</li>
-            <li><span class="method method-get">GET</span> /v1/npwp/format?npwp=...</li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/npwp/validate</span><button class="try-btn" data-method="POST" data-path="/v1/npwp/validate" data-body='{"npwp":"01.234.567.8-012.000"}'>Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/npwp/format?npwp=...</span><button class="try-btn" data-method="GET" data-path="/v1/npwp/format?npwp=012345678012000" data-labels="npwp" data-defaults="012345678012000">Try</button></li>
           </ul>
+          <div class="try-panel"></div>
         </div>
 
         <!-- Phone -->
         <div class="feature-card">
-          
           <h3>Nomor HP</h3>
-          <p>Validasi, normalisasi, dan deteksi operator (Telkomsel, Indosat, XL, dll).</p>
+          <p class="desc">Validasi, normalisasi, dan deteksi operator (Telkomsel, Indosat, XL, dll).</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span> /v1/phone/validate</li>
-            <li><span class="method method-get">GET</span> /v1/phone/operator?phone=...</li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/phone/validate</span><button class="try-btn" data-method="POST" data-path="/v1/phone/validate" data-body='{"phone":"081234567890"}'>Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/phone/operator?phone=...</span><button class="try-btn" data-method="GET" data-path="/v1/phone/operator?phone=081234567890" data-labels="phone" data-defaults="081234567890">Try</button></li>
           </ul>
+          <div class="try-panel"></div>
         </div>
 
         <!-- Rupiah -->
         <div class="feature-card">
-          
           <h3>Rupiah</h3>
-          <p>Format, parse, dan terbilang (angka → kata bahasa Indonesia).</p>
+          <p class="desc">Format, parse, dan terbilang (angka &rarr; kata bahasa Indonesia).</p>
           <ul class="endpoint-list">
-            <li><span class="method method-get">GET</span> /v1/rupiah/format?amount=...</li>
-            <li><span class="method method-get">GET</span> /v1/rupiah/terbilang?amount=...</li>
-            <li><span class="method method-get">GET</span> /v1/rupiah/parse?input=...</li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/format?amount=...</span><button class="try-btn" data-method="GET" data-path="/v1/rupiah/format?amount=1500000" data-labels="amount" data-defaults="1500000">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/terbilang?amount=...</span><button class="try-btn" data-method="GET" data-path="/v1/rupiah/terbilang?amount=1500000" data-labels="amount" data-defaults="1500000">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/rupiah/parse?input=...</span><button class="try-btn" data-method="GET" data-path="/v1/rupiah/parse?input=Rp%201.500.000" data-labels="input" data-defaults="Rp 1.500.000">Try</button></li>
           </ul>
+          <div class="try-panel"></div>
         </div>
 
         <!-- Bank -->
         <div class="feature-card">
-          
           <h3>Bank</h3>
-          <p>Kode bank BI, cari bank, validasi nomor rekening struktural.</p>
+          <p class="desc">Kode bank BI, cari bank, validasi nomor rekening struktural.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-get">GET</span> /v1/bank</li>
-            <li><span class="method method-get">GET</span> /v1/bank/:code</li>
-            <li><span class="method method-post">POST</span> /v1/bank/validate-account</li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/bank</span><button class="try-btn" data-method="GET" data-path="/v1/bank">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/bank/:code</span><button class="try-btn" data-method="GET" data-path="/v1/bank/014" data-labels="code" data-defaults="014">Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/bank/validate-account</span><button class="try-btn" data-method="POST" data-path="/v1/bank/validate-account" data-body='{"bankCode":"014","accountNumber":"1234567890"}'>Try</button></li>
           </ul>
+          <div class="try-panel"></div>
         </div>
 
         <!-- Dummy -->
         <div class="feature-card">
-          
           <h3>Dummy Generator</h3>
-          <p>Generate data dummy untuk testing. NIK, NPWP, nomor HP yang valid secara struktur.</p>
+          <p class="desc">Generate data dummy untuk testing. NIK, NPWP, nomor HP yang valid secara struktur.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span> /v1/dummy/nik</li>
-            <li><span class="method method-post">POST</span> /v1/dummy/phone</li>
-            <li><span class="method method-post">POST</span> /v1/dummy/npwp</li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/nik</span><button class="try-btn" data-method="POST" data-path="/v1/dummy/nik" data-body='{"count":3}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/phone</span><button class="try-btn" data-method="POST" data-path="/v1/dummy/phone" data-body='{"count":3}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/dummy/npwp</span><button class="try-btn" data-method="POST" data-path="/v1/dummy/npwp" data-body='{"count":3}'>Try</button></li>
           </ul>
+          <div class="try-panel"></div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Playground -->
-  <section class="section" id="playground">
-    <div class="container">
-      <h2 class="section-title">API Playground</h2>
-      <p class="section-desc">Coba langsung tanpa install apa-apa.</p>
-
-      <div class="playground">
-        <h3>Try an endpoint</h3>
-        <div class="pg-row">
-          <select class="pg-select" id="pg-method">
-            <option value="GET">GET</option>
-            <option value="POST">POST</option>
-          </select>
-          <input class="pg-input" id="pg-url" placeholder="/v1/rupiah/terbilang?amount=1500000" value="/v1/rupiah/terbilang?amount=1500000">
-          <button class="pg-btn" id="pg-send">Send →</button>
-        </div>
-        <div class="pg-row" id="pg-body-row" style="display:none">
-          <input class="pg-input" id="pg-body" placeholder='{"nik": "320101..."}'>
-        </div>
-        <div class="pg-result" id="pg-result">Response will appear here...</div>
       </div>
     </div>
   </section>
@@ -591,60 +648,92 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
   </footer>
 
   <script>
-    // Playground
-    const methodEl = document.getElementById('pg-method');
-    const urlEl = document.getElementById('pg-url');
-    const bodyEl = document.getElementById('pg-body');
-    const bodyRow = document.getElementById('pg-body-row');
-    const resultEl = document.getElementById('pg-result');
-    const sendBtn = document.getElementById('pg-send');
+    document.querySelectorAll('.try-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.feature-card');
+        const panel = card.querySelector('.try-panel');
+        const isActive = btn.classList.contains('active');
 
-    methodEl.addEventListener('change', () => {
-      bodyRow.style.display = methodEl.value === 'POST' ? 'flex' : 'none';
-      if (methodEl.value === 'POST' && !bodyEl.value) {
-        // Set default body based on URL
-        const url = urlEl.value;
-        if (url.includes('nik')) bodyEl.value = JSON.stringify({ nik: '3201010101900001' });
-        else if (url.includes('npwp')) bodyEl.value = JSON.stringify({ npwp: '012345678901234' });
-        else if (url.includes('phone')) bodyEl.value = JSON.stringify({ phone: '081234567890' });
-        else bodyEl.value = '{}';
-      }
-    });
+        // Close all panels
+        document.querySelectorAll('.try-panel.open').forEach(p => p.classList.remove('open'));
+        document.querySelectorAll('.try-btn.active').forEach(b => b.classList.remove('active'));
 
-    // Preset URLs
-    const presets = {
-      'GET': '/v1/rupiah/terbilang?amount=1500000',
-      'POST': '/v1/nik/validate'
-    };
+        if (isActive) return; // toggle off
 
-    sendBtn.addEventListener('click', async () => {
-      sendBtn.disabled = true;
-      sendBtn.textContent = '...';
-      resultEl.textContent = 'Loading...';
+        btn.classList.add('active');
+        const method = btn.dataset.method;
+        const path = btn.dataset.path;
+        const body = btn.dataset.body || '';
+        const labels = btn.dataset.labels ? btn.dataset.labels.split(',') : [];
+        const defaults = btn.dataset.defaults ? btn.dataset.defaults.split(',') : [];
 
-      try {
-        const opts = { method: methodEl.value, headers: {} };
-        if (methodEl.value === 'POST') {
-          opts.headers['Content-Type'] = 'application/json';
-          opts.body = bodyEl.value || '{}';
+        // Parse path into base + query
+        const [basePath, queryStr] = path.split('?');
+        const queryParams = queryStr ? Object.fromEntries(new URLSearchParams(queryStr)) : {};
+
+        let paramsHtml = '';
+        if (method === 'POST' && body) {
+          paramsHtml = '<div class="try-params"><div class="try-param-row"><span class="try-param-label">body</span><input class="try-param-input try-body" value="' + body.replace(/"/g, '&quot;') + '"></div></div>';
+        } else if (Object.keys(queryParams).length > 0) {
+          paramsHtml = '<div class="try-params">';
+          for (const [k, v] of Object.entries(queryParams)) {
+            paramsHtml += '<div class="try-param-row"><span class="try-param-label">' + k + '</span><input class="try-param-input" data-param="' + k + '" value="' + v + '"></div>';
+          }
+          paramsHtml += '</div>';
         }
 
-        const res = await fetch(urlEl.value, opts);
-        const data = await res.json();
+        panel.innerHTML =
+          '<div class="try-panel-header">' +
+            '<div class="try-panel-url">' +
+              '<span class="method-badge ' + method.toLowerCase() + '">' + method + '</span>' +
+              '<input class="try-url-input" value="' + path + '" readonly>' +
+            '</div>' +
+            '<button class="try-send">Send</button>' +
+          '</div>' +
+          '<div class="try-panel-body">' +
+            paramsHtml +
+            '<div class="try-result">Click Send to make a request</div>' +
+          '</div>';
 
-        const statusClass = res.ok ? 'pg-status-200' : 'pg-status-400';
-        resultEl.innerHTML = '<span class="pg-status ' + statusClass + '">' + res.status + ' ' + res.statusText + '</span>\\n' + JSON.stringify(data, null, 2);
-      } catch (e) {
-        resultEl.textContent = 'Error: ' + e.message;
-      }
+        panel.classList.add('open');
 
-      sendBtn.disabled = false;
-      sendBtn.textContent = 'Send →';
+        // Wire send button
+        const sendBtn = panel.querySelector('.try-send');
+        sendBtn.addEventListener('click', async () => {
+          sendBtn.disabled = true;
+          sendBtn.textContent = '...';
+          const result = panel.querySelector('.try-result');
+          result.textContent = 'Loading...';
+
+          let url = basePath;
+          let fetchOpts = { method };
+
+          if (method === 'POST' && body) {
+            const bodyInput = panel.querySelector('.try-body');
+            fetchOpts.headers = { 'Content-Type': 'application/json' };
+            fetchOpts.body = bodyInput ? bodyInput.value : body;
+          } else {
+            const inputs = panel.querySelectorAll('.try-param-input[data-param]');
+            const params = new URLSearchParams();
+            inputs.forEach(inp => { if (inp.value) params.set(inp.dataset.param, inp.value); });
+            const qs = params.toString();
+            if (qs) url += '?' + qs;
+          }
+
+          try {
+            const res = await fetch(url, fetchOpts);
+            const data = await res.json();
+            const statusClass = res.ok ? 'ok' : 'err';
+            result.innerHTML = '<span class="status ' + statusClass + '">' + res.status + ' ' + res.statusText + '</span>\\n' + JSON.stringify(data, null, 2);
+          } catch (e) {
+            result.innerHTML = '<span class="status err">Error</span>\\n' + e.message;
+          }
+
+          sendBtn.disabled = false;
+          sendBtn.textContent = 'Send';
+        });
+      });
     });
-
-    // Enter key
-    urlEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendBtn.click(); });
-    bodyEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendBtn.click(); });
   </script>
 </body>
 </html>`;
