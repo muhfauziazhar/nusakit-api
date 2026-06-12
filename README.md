@@ -2,7 +2,13 @@
 
 > **Indonesian Data Validation API** — NIK, NPWP, Phone, Rupiah, Bank, Wilayah Administratif & Kode Pos.
 
+[![Live API](https://img.shields.io/badge/API-nusakit.my.id-00b894?style=flat-square)](https://nusakit.my.id)
+[![Cloudflare Workers](https://img.shields.io/badge/deploys-CF%20Workers-F6821F?style=flat-square)](https://workers.cloudflare.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+
 One API for all Indonesian data validation. Open source, free to use, powered by Cloudflare Workers.
+
+**🔗 Live API: [nusakit.my.id](https://nusakit.my.id)**
 
 ## ✨ Features
 
@@ -20,24 +26,24 @@ One API for all Indonesian data validation. Open source, free to use, powered by
 
 ```bash
 # Validate NIK
-curl https://api.nusakit.id/v1/nik/validate?nik=3201010101900001
+curl https://nusakit.my.id/v1/nik/validate?nik=3201010101900001
 
 # Terbilang — number to Indonesian words
-curl https://api.nusakit.id/v1/rupiah/terbilang?amount=1500000
+curl https://nusakit.my.id/v1/rupiah/terbilang?amount=1500000
 # → "satu juta lima ratus ribu rupiah"
 
 # Search wilayah
-curl https://api.nusakit.id/v1/wilayah/search?q=bandung
+curl https://nusakit.my.id/v1/wilayah/search?q=bandung
 
 # Detect phone operator
-curl https://api.nusakit.id/v1/phone/operator?phone=081234567890
+curl https://nusakit.my.id/v1/phone/operator?phone=081234567890
 # → { "operator": "Telkomsel", "valid": true }
 
 # List all banks
-curl https://api.nusakit.id/v1/bank
+curl https://nusakit.my.id/v1/bank
 
 # Generate dummy NIK for testing
-curl -X POST https://api.nusakit.id/v1/dummy/nik \
+curl -X POST https://nusakit.my.id/v1/dummy/nik \
   -H "Content-Type: application/json" \
   -d '{"count": 5}'
 ```
