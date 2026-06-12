@@ -7,3 +7,5 @@ dist/
 .env.local
 .DS_Store
 seed.sql
+.agents/
+skills-lock.json
