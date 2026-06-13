@@ -324,6 +324,7 @@ const html = `<!DOCTYPE html>
     .try-panel-url {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 6px;
       flex: 1;
       min-width: 0;
@@ -353,7 +354,9 @@ const html = `<!DOCTYPE html>
       color: var(--text);
       font-family: var(--mono);
       font-size: 12px;
-      width: 120px;
+      flex: 1 1 90px;
+      min-width: 90px;
+      width: auto;
       outline: none;
       transition: border-color 0.15s;
     }
