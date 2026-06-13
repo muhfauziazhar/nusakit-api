@@ -72,12 +72,12 @@ function generateInserts(table: string, data: typeof rows, extraField?: string):
   return lines;
 }
 
+// No explicit BEGIN TRANSACTION/COMMIT — D1's remote executor wraps the file in
+// its own transaction and rejects manual transaction statements.
 const output: string[] = [
   '-- Nusakit API D1 Seed Data',
   '-- Generated from cahyadsn/wilayah (Kepmendagri No. 300.2.2-2138 Tahun 2025)',
   '-- License: MIT (cahyadsn/wilayah)',
-  '',
-  'BEGIN TRANSACTION;',
   '',
   '-- Provinces',
   ...generateInserts('provinces', provinces),
@@ -90,8 +90,6 @@ const output: string[] = [
   '',
   '-- Villages',
   ...generateInserts('villages', villages, 'district_code'),
-  '',
-  'COMMIT;',
 ];
 
 const outputPath = join(process.cwd(), 'seed.sql');
