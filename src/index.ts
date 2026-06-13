@@ -57,7 +57,7 @@ app.get('/openapi.json', (c) => {
       license: { name: 'MIT', url: 'https://opensource.org/licenses/MIT' },
     },
     servers: [
-      { url: 'https://api.nusakit.id', description: 'Production' },
+      { url: 'https://nusakit.my.id', description: 'Production' },
       { url: 'http://localhost:8787', description: 'Local Development' },
     ],
     paths: {

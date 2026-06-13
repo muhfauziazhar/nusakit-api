@@ -32,9 +32,13 @@ export function kvCache(key: string, ttl: number = 86400) {
   return async (c: Context, next: Next) => {
     const kv = (c.env as any).KV as KVNamespace | undefined;
 
+    // Include path + query so requests with different params don't collide
+    // on a single cache entry (e.g. /search?q=a vs /search?q=b).
+    const fullKey = cacheKey(`${key}:`, c.req.url);
+
     // Try cache first
     if (kv) {
-      const cached = await kv.get(`cache:${key}`, 'json');
+      const cached = await kv.get(`cache:${fullKey}`, 'json');
       if (cached) {
         return c.json(cached, 200, {
           'X-Cache': 'HIT',
@@ -50,7 +54,7 @@ export function kvCache(key: string, ttl: number = 86400) {
     if (kv && c.res.status === 200) {
       try {
         const body = await c.res.clone().json();
-        await kv.put(`cache:${key}`, JSON.stringify(body), {
+        await kv.put(`cache:${fullKey}`, JSON.stringify(body), {
           expirationTtl: ttl,
         });
         c.res.headers.set('X-Cache', 'MISS');

@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "seed": "tsx scripts/seed.ts",
     "build:sql": "tsx scripts/build-sql.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
