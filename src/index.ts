@@ -12,6 +12,7 @@ import { rupiahRoutes } from './routes/rupiah.js';
 import { bankRoutes } from './routes/bank.js';
 import { dummyRoutes } from './routes/dummy.js';
 import { qrisRoutes } from './routes/qris.js';
+import { rateLimit } from './middleware/rateLimit.js';
 import { landingPage } from './landing.js';
 
 const app = new Hono<{ Bindings: Env }>();
@@ -20,10 +21,17 @@ const app = new Hono<{ Bindings: Env }>();
 app.use('*', logger());
 app.use('*', prettyJSON());
 app.use('*', cors({
-  origin: '*',
+  // Honour the CORS_ORIGIN var; '*' (default) reflects the request origin.
+  origin: (origin, c) => {
+    const allowed = c.env.CORS_ORIGIN || '*';
+    return allowed === '*' ? origin || '*' : allowed;
+  },
   allowMethods: ['GET', 'POST', 'OPTIONS'],
   allowHeaders: ['Content-Type'],
 }));
+
+// Best-effort per-IP rate limiting on the API surface (fails open without KV).
+app.use('/v1/*', rateLimit());
 
 // ─── Landing Page ────────────────────────────────────────────
 app.get('/', landingPage);
@@ -67,13 +75,24 @@ app.get('/openapi.json', (c) => {
       '/v1/wilayah/districts/{regencyCode}': { get: { tags: ['Wilayah'], summary: 'List districts in a regency' } },
       '/v1/wilayah/villages/{districtCode}': { get: { tags: ['Wilayah'], summary: 'List villages in a district' } },
       '/v1/wilayah/search': { get: { tags: ['Wilayah'], summary: 'Search any region by name', parameters: [{ name: 'q', in: 'query', required: true, schema: { type: 'string' } }, { name: 'limit', in: 'query', schema: { type: 'integer', default: 20 } }] } },
-      '/v1/nik/validate': { post: { tags: ['NIK'], summary: 'Validate and parse NIK', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { nik: { type: 'string' } }, required: ['nik'] } } } } } },
-      '/v1/npwp/validate': { post: { tags: ['NPWP'], summary: 'Validate NPWP' } },
-      '/v1/phone/validate': { post: { tags: ['Phone'], summary: 'Validate Indonesian phone number' } },
-      '/v1/rupiah/format': { get: { tags: ['Rupiah'], summary: 'Format number to Rupiah', parameters: [{ name: 'amount', in: 'query', required: true, schema: { type: 'number' } }] } },
-      '/v1/rupiah/terbilang': { get: { tags: ['Rupiah'], summary: 'Convert number to Indonesian words' } },
-      '/v1/bank': { get: { tags: ['Bank'], summary: 'List all banks' } },
+      '/v1/wilayah/lookup/{code}': { get: { tags: ['Wilayah'], summary: 'Resolve the full hierarchy for a dotted region code', parameters: [{ name: 'code', in: 'path', required: true, schema: { type: 'string' }, description: 'e.g. 32.01.01.2001' }] } },
+      '/v1/nik/validate': {
+        get: { tags: ['NIK'], summary: 'Validate and parse NIK (query form)', parameters: [{ name: 'nik', in: 'query', required: true, schema: { type: 'string' } }] },
+        post: { tags: ['NIK'], summary: 'Validate and parse NIK', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { nik: { type: 'string' } }, required: ['nik'] } } } } },
+      },
+      '/v1/npwp/validate': { post: { tags: ['NPWP'], summary: 'Validate NPWP', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { npwp: { type: 'string' } }, required: ['npwp'] } } } } } },
+      '/v1/npwp/format': { get: { tags: ['NPWP'], summary: 'Validate and format an NPWP', parameters: [{ name: 'npwp', in: 'query', required: true, schema: { type: 'string' } }] } },
+      '/v1/phone/validate': { post: { tags: ['Phone'], summary: 'Validate Indonesian phone number', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { phone: { type: 'string' } }, required: ['phone'] } } } } } },
+      '/v1/phone/operator': { get: { tags: ['Phone'], summary: 'Detect operator from a phone number', parameters: [{ name: 'phone', in: 'query', required: true, schema: { type: 'string' } }] } },
+      '/v1/rupiah/format': { get: { tags: ['Rupiah'], summary: 'Format number to Rupiah', parameters: [{ name: 'amount', in: 'query', required: true, schema: { type: 'number' } }, { name: 'symbol', in: 'query', schema: { type: 'boolean', default: true } }, { name: 'decimals', in: 'query', schema: { type: 'integer', default: 0 } }] } },
+      '/v1/rupiah/terbilang': { get: { tags: ['Rupiah'], summary: 'Convert number to Indonesian words', parameters: [{ name: 'amount', in: 'query', required: true, schema: { type: 'number' } }] } },
+      '/v1/rupiah/parse': { get: { tags: ['Rupiah'], summary: 'Parse a Rupiah-formatted string to a number', parameters: [{ name: 'input', in: 'query', required: true, schema: { type: 'string' } }] } },
+      '/v1/bank': { get: { tags: ['Bank'], summary: 'List all banks', parameters: [{ name: 'q', in: 'query', schema: { type: 'string' }, description: 'Search by name' }] } },
       '/v1/bank/{code}': { get: { tags: ['Bank'], summary: 'Get bank by code' } },
+      '/v1/bank/validate-account': { post: { tags: ['Bank'], summary: 'Validate an account number length for a bank', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { bankCode: { type: 'string' }, account: { type: 'string' } }, required: ['bankCode', 'account'] } } } } } },
+      '/v1/dummy/nik': { post: { tags: ['Dummy'], summary: 'Generate dummy NIK(s) for testing', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { count: { type: 'integer', default: 1 }, provinceCode: { type: 'string' }, gender: { type: 'string', enum: ['L', 'P'] }, birthYear: { type: 'integer' } } } } } } } },
+      '/v1/dummy/phone': { post: { tags: ['Dummy'], summary: 'Generate dummy phone number(s) for testing', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { count: { type: 'integer', default: 1 } } } } } } } },
+      '/v1/dummy/npwp': { post: { tags: ['Dummy'], summary: 'Generate dummy NPWP(s) for testing', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { count: { type: 'integer', default: 1 } } } } } } } },
       '/v1/qris/convert': { post: { tags: ['QRIS'], summary: 'Convert static QRIS to dynamic with amount and optional fee', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { qris: { type: 'string' }, amount: { type: 'number' }, feeType: { type: 'string', enum: ['rupiah', 'percent'] }, feeValue: { type: 'number' } }, required: ['qris', 'amount'] } } } } } },
       '/v1/qris/parse': { post: { tags: ['QRIS'], summary: 'Parse QRIS payload info', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { qris: { type: 'string' } }, required: ['qris'] } } } } } },
     },
@@ -85,8 +104,9 @@ app.notFound((c) => c.json({ success: false, error: 'Not Found', path: c.req.pat
 
 // ─── Error Handler ───────────────────────────────────────────
 app.onError((err, c) => {
+  // Log full detail server-side; don't leak internals to the client.
   console.error(err);
-  return c.json({ success: false, error: 'Internal Server Error', message: err.message }, 500);
+  return c.json({ success: false, error: 'Internal Server Error' }, 500);
 });
 
 export default app;
