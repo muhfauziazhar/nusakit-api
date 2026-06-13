@@ -29,7 +29,7 @@ wilayahRoutes.get('/provinces', async (c) => {
   }
   sql += ' ORDER BY code';
 
-  const result = await c.env.DB.prepare(sql).bind(...params).all();
+  const result = await c.env.DB!.prepare(sql).bind(...params).all();
   return c.json(ok(result.results), 200, {
     'Cache-Control': 'public, max-age=86400, s-maxage=31536000',
   });
@@ -38,7 +38,7 @@ wilayahRoutes.get('/provinces', async (c) => {
 // ─── Get province by code ────────────────────────────────────
 wilayahRoutes.get('/provinces/:code', async (c) => {
   const code = c.req.param('code');
-  const result = await c.env.DB.prepare(
+  const result = await c.env.DB!.prepare(
     'SELECT code, name FROM provinces WHERE code = ?'
   ).bind(code).first();
 
@@ -62,7 +62,7 @@ wilayahRoutes.get('/regencies/:provinceCode', async (c) => {
   }
   sql += ' ORDER BY code';
 
-  const result = await c.env.DB.prepare(sql).bind(...params).all();
+  const result = await c.env.DB!.prepare(sql).bind(...params).all();
   return c.json(ok(result.results), 200, {
     'Cache-Control': 'public, max-age=86400, s-maxage=31536000',
   });
@@ -82,7 +82,7 @@ wilayahRoutes.get('/districts/:regencyCode', async (c) => {
   }
   sql += ' ORDER BY code';
 
-  const result = await c.env.DB.prepare(sql).bind(...params).all();
+  const result = await c.env.DB!.prepare(sql).bind(...params).all();
   return c.json(ok(result.results), 200, {
     'Cache-Control': 'public, max-age=86400, s-maxage=604800',
   });
@@ -102,7 +102,7 @@ wilayahRoutes.get('/villages/:districtCode', async (c) => {
   }
   sql += ' ORDER BY code';
 
-  const result = await c.env.DB.prepare(sql).bind(...params).all();
+  const result = await c.env.DB!.prepare(sql).bind(...params).all();
   return c.json(ok(result.results), 200, {
     'Cache-Control': 'public, max-age=86400, s-maxage=604800',
   });
@@ -131,7 +131,7 @@ wilayahRoutes.get('/search', async (c) => {
     LIMIT ?
   `;
 
-  const result = await c.env.DB.prepare(sql)
+  const result = await c.env.DB!.prepare(sql)
     .bind(searchPattern, searchPattern, searchPattern, searchPattern, limit)
     .all();
 
@@ -146,19 +146,19 @@ wilayahRoutes.get('/lookup/:code', async (c) => {
   const result: Record<string, unknown> = {};
 
   if (parts.length >= 1) {
-    const prov = await c.env.DB.prepare('SELECT code, name FROM provinces WHERE code = ?').bind(parts[0]).first();
+    const prov = await c.env.DB!.prepare('SELECT code, name FROM provinces WHERE code = ?').bind(parts[0]).first();
     if (prov) result.province = prov;
   }
   if (parts.length >= 2) {
-    const reg = await c.env.DB.prepare('SELECT code, name FROM regencies WHERE code = ?').bind(`${parts[0]}.${parts[1]}`).first();
+    const reg = await c.env.DB!.prepare('SELECT code, name FROM regencies WHERE code = ?').bind(`${parts[0]}.${parts[1]}`).first();
     if (reg) result.regency = reg;
   }
   if (parts.length >= 3) {
-    const dist = await c.env.DB.prepare('SELECT code, name FROM districts WHERE code = ?').bind(`${parts[0]}.${parts[1]}.${parts[2]}`).first();
+    const dist = await c.env.DB!.prepare('SELECT code, name FROM districts WHERE code = ?').bind(`${parts[0]}.${parts[1]}.${parts[2]}`).first();
     if (dist) result.district = dist;
   }
   if (parts.length >= 4) {
-    const vil = await c.env.DB.prepare('SELECT code, name FROM villages WHERE code = ?').bind(code).first();
+    const vil = await c.env.DB!.prepare('SELECT code, name FROM villages WHERE code = ?').bind(code).first();
     if (vil) result.village = vil;
   }
 

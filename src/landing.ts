@@ -627,7 +627,7 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <ul class="endpoint-list">
             <li><span class="method method-get">GET</span><span class="path">/v1/bank</span><button class="try-btn" data-method="GET" data-base="/v1/bank">Try</button></li>
             <li><span class="method method-get">GET</span><span class="path">/v1/bank/<i>:code</i></span><button class="try-btn" data-method="GET" data-base="/v1/bank/" data-slug="code" data-default-slug="014">Try</button></li>
-            <li><span class="method method-post">POST</span><span class="path">/v1/bank/validate-account</span><button class="try-btn" data-method="POST" data-base="/v1/bank/validate-account" data-body='{"bankCode":"014","accountNumber":"1234567890"}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/bank/validate-account</span><button class="try-btn" data-method="POST" data-base="/v1/bank/validate-account" data-body='{"bankCode":"014","account":"1234567890"}'>Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
