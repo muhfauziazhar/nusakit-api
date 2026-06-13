@@ -38,13 +38,13 @@ if (rows.length === 0) {
   process.exit(1);
 }
 
+// Note: no explicit BEGIN TRANSACTION/COMMIT — D1's remote executor wraps the
+// file in its own transaction and rejects manual transaction statements.
 const batchSize = 500;
 const lines: string[] = [
   '-- Nusakit API D1 Seed Data — kodepos',
   '-- Generated from cahyadsn/wilayah_kodepos',
   '-- License: MIT (cahyadsn/wilayah_kodepos)',
-  '',
-  'BEGIN TRANSACTION;',
   '',
 ];
 
@@ -55,8 +55,6 @@ for (let i = 0; i < rows.length; i += batchSize) {
   lines.push(values.join(',\n') + ';');
   lines.push('');
 }
-
-lines.push('COMMIT;');
 
 const outputPath = join(process.cwd(), 'kodepos-seed.sql');
 const output = lines.join('\n');
