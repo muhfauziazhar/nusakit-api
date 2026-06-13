@@ -23,6 +23,9 @@
   },
   "keywords": ["indonesia", "nik", "npwp", "rupiah", "wilayah", "api", "cloudflare-workers"],
   "author": "Muhammad Fauzi Azhar",
+  "contributors": [
+    "Lucky Wirasakti <lucky.wirasakti@gmail.com> (QRIS module)"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
