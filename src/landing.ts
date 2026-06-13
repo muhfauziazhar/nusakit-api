@@ -646,13 +646,13 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
 
         <!-- QRIS -->
         <div class="feature-card">
-          <div class="feature-icon">📱</div>
           <h3>QRIS</h3>
-          <p>Konversi QRIS statis menjadi dinamis dengan nominal dan biaya layanan, plus parse payload QRIS.</p>
+          <p class="desc">Konversi QRIS statis menjadi dinamis dengan nominal dan biaya layanan, plus parse payload QRIS.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span> /v1/qris/convert</li>
-            <li><span class="method method-post">POST</span> /v1/qris/parse</li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/qris/convert</span><button class="try-btn" data-method="POST" data-base="/v1/qris/convert" data-body='{"qris":"000201...","amount":25000}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/qris/parse</span><button class="try-btn" data-method="POST" data-base="/v1/qris/parse" data-body='{"qris":"000201..."}'>Try</button></li>
           </ul>
+          <div class="try-panel"></div>
         </div>
       </div>
     </div>
