@@ -3,7 +3,9 @@
  * Ported from @fauzitech/nusakit
  */
 
-export type Operator = 'Telkomsel' | 'Indosat' | 'XL' | 'Axis' | 'Tri' | 'Smartfren' | 'by.U' | 'Unknown';
+// Note: by.U is a Telkomsel digital brand sharing the 0851 prefix, so it
+// cannot be distinguished by prefix alone and is intentionally not listed here.
+export type Operator = 'Telkomsel' | 'Indosat' | 'XL' | 'Axis' | 'Tri' | 'Smartfren' | 'Unknown';
 
 const PREFIX_MAP: Record<string, Operator> = {};
 function register(op: Operator, prefixes: string[]) {
