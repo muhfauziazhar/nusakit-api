@@ -11,6 +11,7 @@ import { phoneRoutes } from './routes/phone.js';
 import { rupiahRoutes } from './routes/rupiah.js';
 import { bankRoutes } from './routes/bank.js';
 import { dummyRoutes } from './routes/dummy.js';
+import { qrisRoutes } from './routes/qris.js';
 import { landingPage } from './landing.js';
 
 const app = new Hono<{ Bindings: Env }>();
@@ -42,6 +43,7 @@ app.route('/v1/phone', phoneRoutes);
 app.route('/v1/rupiah', rupiahRoutes);
 app.route('/v1/bank', bankRoutes);
 app.route('/v1/dummy', dummyRoutes);
+app.route('/v1/qris', qrisRoutes);
 
 // ─── OpenAPI Spec ────────────────────────────────────────────
 app.get('/openapi.json', (c) => {
@@ -72,6 +74,8 @@ app.get('/openapi.json', (c) => {
       '/v1/rupiah/terbilang': { get: { tags: ['Rupiah'], summary: 'Convert number to Indonesian words' } },
       '/v1/bank': { get: { tags: ['Bank'], summary: 'List all banks' } },
       '/v1/bank/{code}': { get: { tags: ['Bank'], summary: 'Get bank by code' } },
+      '/v1/qris/convert': { post: { tags: ['QRIS'], summary: 'Convert static QRIS to dynamic with amount and optional fee', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { qris: { type: 'string' }, amount: { type: 'number' }, feeType: { type: 'string', enum: ['rupiah', 'percent'] }, feeValue: { type: 'number' } }, required: ['qris', 'amount'] } } } } } },
+      '/v1/qris/parse': { post: { tags: ['QRIS'], summary: 'Parse QRIS payload info', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { qris: { type: 'string' } }, required: ['qris'] } } } } } },
     },
   });
 });

@@ -643,6 +643,17 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           </ul>
           <div class="try-panel"></div>
         </div>
+
+        <!-- QRIS -->
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>QRIS</h3>
+          <p>Konversi QRIS statis menjadi dinamis dengan nominal dan biaya layanan, plus parse payload QRIS.</p>
+          <ul class="endpoint-list">
+            <li><span class="method method-post">POST</span> /v1/qris/convert</li>
+            <li><span class="method method-post">POST</span> /v1/qris/parse</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
