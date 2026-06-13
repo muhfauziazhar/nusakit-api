@@ -420,6 +420,19 @@ const html = `<!DOCTYPE html>
 
     .try-param-input:focus { border-color: var(--accent); }
 
+    .try-body-row { align-items: flex-start; }
+    .try-body-row .try-param-label { padding-top: 8px; }
+
+    textarea.try-body {
+      width: 100%;
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.5;
+      white-space: pre;
+      overflow-wrap: normal;
+      tab-size: 2;
+    }
+
     .try-result {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -663,8 +676,8 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <h3>QRIS</h3>
           <p class="desc">Konversi QRIS statis menjadi dinamis dengan nominal dan biaya layanan, plus parse payload QRIS.</p>
           <ul class="endpoint-list">
-            <li><span class="method method-post">POST</span><span class="path">/v1/qris/convert</span><button class="try-btn" data-method="POST" data-base="/v1/qris/convert" data-body='{"qris":"000201...","amount":25000}'>Try</button></li>
-            <li><span class="method method-post">POST</span><span class="path">/v1/qris/parse</span><button class="try-btn" data-method="POST" data-base="/v1/qris/parse" data-body='{"qris":"000201..."}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/qris/convert</span><button class="try-btn" data-method="POST" data-base="/v1/qris/convert" data-body='{"qris":"00020101021126630014ID.CO.QRIS.WWW01189360001400000000010212ID12345678900303UMI5204581253033605802ID5916WARUNG KOPI NUSA6007BANDUNG6105401116304AE85","amount":25000,"feeType":"rupiah","feeValue":1000}'>Try</button></li>
+            <li><span class="method method-post">POST</span><span class="path">/v1/qris/parse</span><button class="try-btn" data-method="POST" data-base="/v1/qris/parse" data-body='{"qris":"00020101021126630014ID.CO.QRIS.WWW01189360001400000000010212ID12345678900303UMI5204581253033605802ID5916WARUNG KOPI NUSA6007BANDUNG6105401116304AE85"}'>Try</button></li>
           </ul>
           <div class="try-panel"></div>
         </div>
@@ -729,7 +742,7 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
 
         // Build query params or body input
         if (method === 'POST' && body) {
-          paramsHtml = '<div class="try-params"><div class="try-param-row"><span class="try-param-label">body</span><input class="try-param-input try-body"></div></div>';
+          paramsHtml = '<div class="try-params"><div class="try-param-row try-body-row"><span class="try-param-label">body</span><textarea class="try-param-input try-body" rows="6" spellcheck="false"></textarea></div></div>';
         } else if (params) {
           const pairs = new URLSearchParams(params);
           paramsHtml = '<div class="try-params">';
@@ -751,9 +764,12 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
 
         panel.classList.add('open');
 
-        // Set body value via JS to avoid template escaping issues
+        // Set body value via JS to avoid template escaping issues.
+        // Pretty-print so long JSON (e.g. QRIS payloads) is readable/editable.
         if (method === 'POST' && body) {
-          panel.querySelector('.try-body').value = body;
+          let pretty = body;
+          try { pretty = JSON.stringify(JSON.parse(body), null, 2); } catch (_) {}
+          panel.querySelector('.try-body').value = pretty;
         }
 
         // Wire send

@@ -22,6 +22,7 @@ One API for all Indonesian data validation. Open source, free to use, powered by
 | 💰 **Rupiah** | Format, parse, terbilang (angka → kata bahasa Indonesia) |
 | 🏦 **Bank** | Kode bank BI, search, validasi nomor rekening |
 | 🧪 **Dummy** | Generator data testing — NIK, NPWP, phone yang valid secara struktur |
+| 🔳 **QRIS** | Konversi QRIS statis → dinamis (nominal + biaya layanan) & parse payload EMVCo |
 
 ## 🚀 Quick Start
 
@@ -53,6 +54,11 @@ curl https://nusakit.my.id/v1/bank
 curl -X POST https://nusakit.my.id/v1/dummy/nik \
   -H "Content-Type: application/json" \
   -d '{"count": 5}'
+
+# Convert a static QRIS to dynamic with amount + fee
+curl -X POST https://nusakit.my.id/v1/qris/convert \
+  -H "Content-Type: application/json" \
+  -d '{"qris": "00020101...6304XXXX", "amount": 25000, "feeType": "rupiah", "feeValue": 1000}'
 ```
 
 ## 📚 API Endpoints
@@ -112,6 +118,12 @@ curl -X POST https://nusakit.my.id/v1/dummy/nik \
 | POST | `/v1/dummy/nik` | Generate dummy NIK(s) |
 | POST | `/v1/dummy/phone` | Generate dummy phone number(s) |
 | POST | `/v1/dummy/npwp` | Generate dummy NPWP(s) |
+
+### QRIS
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/v1/qris/convert` | Convert static QRIS → dynamic with `amount` (+ optional `feeType`/`feeValue`) |
+| POST | `/v1/qris/parse` | Parse a QRIS payload into its EMVCo TLV fields + merchant info |
 
 ## 🛠️ Self-Host / Development
 
@@ -188,3 +200,7 @@ MIT © [Muhammad Fauzi Azhar](https://github.com/muhfauziazhar)
 - [cahyadsn/wilayah](https://github.com/cahyadsn/wilayah) — Indonesian administrative region data
 - [Hono](https://hono.dev) — Ultrafast web framework
 - [Cloudflare Workers](https://workers.cloudflare.com) — Edge computing platform
+
+### Contributors
+
+- [@luckywirasakti](https://github.com/luckywirasakti) (Lucky Wirasakti) — QRIS module (convert & parse)
