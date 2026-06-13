@@ -7,6 +7,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "build:sql": "tsx scripts/build-sql.ts",
+    "build:kodepos": "tsx scripts/build-kodepos.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

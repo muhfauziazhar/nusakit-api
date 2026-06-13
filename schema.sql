@@ -39,3 +39,12 @@ CREATE TABLE IF NOT EXISTS villages (
 );
 CREATE INDEX IF NOT EXISTS idx_villages_district ON villages(district_code);
 CREATE INDEX IF NOT EXISTS idx_villages_name ON villages(name);
+
+-- Postal codes / Kode Pos — maps a village to its 5-digit postal code.
+-- Source: cahyadsn/wilayah_kodepos. Additive: seed separately from wilayah.
+CREATE TABLE IF NOT EXISTS kodepos (
+  village_code TEXT PRIMARY KEY,
+  postal_code TEXT NOT NULL,
+  FOREIGN KEY (village_code) REFERENCES villages(code)
+);
+CREATE INDEX IF NOT EXISTS idx_kodepos_postal ON kodepos(postal_code);

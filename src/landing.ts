@@ -575,6 +575,17 @@ curl <span class="url">https://nusakit.my.id/v1/phone/operator?phone=08123456789
           <div class="try-panel"></div>
         </div>
 
+        <!-- Kode Pos -->
+        <div class="feature-card">
+          <h3>Kode Pos</h3>
+          <p class="desc">Cari kode pos dari kode wilayah, atau cari wilayah dari kode pos. Sumber: cahyadsn/wilayah_kodepos.</p>
+          <ul class="endpoint-list">
+            <li><span class="method method-get">GET</span><span class="path">/v1/kodepos/wilayah/<i>:code</i></span><button class="try-btn" data-method="GET" data-base="/v1/kodepos/wilayah/" data-slug="code" data-default-slug="32.04.11.2001">Try</button></li>
+            <li><span class="method method-get">GET</span><span class="path">/v1/kodepos/<i>:postalCode</i></span><button class="try-btn" data-method="GET" data-base="/v1/kodepos/" data-slug="postalCode" data-default-slug="40111">Try</button></li>
+          </ul>
+          <div class="try-panel"></div>
+        </div>
+
         <!-- NIK -->
         <div class="feature-card">
           <h3>NIK (KTP)</h3>

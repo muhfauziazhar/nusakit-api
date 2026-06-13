@@ -12,6 +12,7 @@ import { rupiahRoutes } from './routes/rupiah.js';
 import { bankRoutes } from './routes/bank.js';
 import { dummyRoutes } from './routes/dummy.js';
 import { qrisRoutes } from './routes/qris.js';
+import { kodeposRoutes } from './routes/kodepos.js';
 import { rateLimit } from './middleware/rateLimit.js';
 import { landingPage } from './landing.js';
 
@@ -52,6 +53,7 @@ app.route('/v1/rupiah', rupiahRoutes);
 app.route('/v1/bank', bankRoutes);
 app.route('/v1/dummy', dummyRoutes);
 app.route('/v1/qris', qrisRoutes);
+app.route('/v1/kodepos', kodeposRoutes);
 
 // ─── OpenAPI Spec ────────────────────────────────────────────
 app.get('/openapi.json', (c) => {
@@ -76,6 +78,8 @@ app.get('/openapi.json', (c) => {
       '/v1/wilayah/villages/{districtCode}': { get: { tags: ['Wilayah'], summary: 'List villages in a district' } },
       '/v1/wilayah/search': { get: { tags: ['Wilayah'], summary: 'Search any region by name', parameters: [{ name: 'q', in: 'query', required: true, schema: { type: 'string' } }, { name: 'limit', in: 'query', schema: { type: 'integer', default: 20 } }] } },
       '/v1/wilayah/lookup/{code}': { get: { tags: ['Wilayah'], summary: 'Resolve the full hierarchy for a dotted region code', parameters: [{ name: 'code', in: 'path', required: true, schema: { type: 'string' }, description: 'e.g. 32.01.01.2001' }] } },
+      '/v1/kodepos/wilayah/{code}': { get: { tags: ['Kode Pos'], summary: 'Get the postal code for a village/kelurahan code', parameters: [{ name: 'code', in: 'path', required: true, schema: { type: 'string' }, description: '4-level code, e.g. 32.04.11.2001' }] } },
+      '/v1/kodepos/{postalCode}': { get: { tags: ['Kode Pos'], summary: 'List all areas that share a postal code', parameters: [{ name: 'postalCode', in: 'path', required: true, schema: { type: 'string' }, description: '5-digit postal code, e.g. 40111' }, { name: 'limit', in: 'query', schema: { type: 'integer', default: 50 } }] } },
       '/v1/nik/validate': {
         get: { tags: ['NIK'], summary: 'Validate and parse NIK (query form)', parameters: [{ name: 'nik', in: 'query', required: true, schema: { type: 'string' } }] },
         post: { tags: ['NIK'], summary: 'Validate and parse NIK', requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { nik: { type: 'string' } }, required: ['nik'] } } } } },
